@@ -257,4 +257,71 @@ class BookingTest extends TestCase
             ->assertStatus(422)
             ->assertJsonValidationErrors('start_time');
     }
+    public function test_user_cannot_book_outside_staff_working_hours(): void
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $business = Business::create([
+            'name' => 'Test Beauty Salon',
+            'slug' => 'test-beauty-salon',
+            'country' => 'DE',
+            'timezone' => 'Europe/Berlin',
+            'currency' => 'EUR',
+        ]);
+
+        BusinessMember::create([
+            'business_id' => $business->id,
+            'user_id' => $user->id,
+            'role' => 'owner',
+        ]);
+
+        $staff = Staff::create([
+            'business_id' => $business->id,
+            'name' => 'Sarah',
+            'is_active' => true,
+        ]);
+
+        $service = Service::create([
+            'business_id' => $business->id,
+            'name' => 'Manicure',
+            'price' => 20,
+            'duration_minutes' => 30,
+            'is_active' => true,
+        ]);
+
+        $staff->services()->attach($service->id);
+
+        BusinessWorkingHour::create([
+            'business_id' => $business->id,
+            'day_of_week' => 1,
+            'open_time' => '09:00',
+            'close_time' => '18:00',
+            'is_closed' => false,
+        ]);
+
+        StaffWorkingHour::create([
+            'staff_id' => $staff->id,
+            'day_of_week' => 1,
+            'open_time' => '10:00',
+            'close_time' => '16:00',
+            'is_closed' => false,
+        ]);
+
+        $response = $this->postJson(
+            "/api/businesses/{$business->id}/appointments",
+            [
+                'staff_id' => $staff->id,
+                'service_id' => $service->id,
+                'appointment_date' => '2026-09-21',
+                'start_time' => '16:00',
+                'end_time' => '16:30',
+            ]
+        );
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('start_time');
+    }
 }
