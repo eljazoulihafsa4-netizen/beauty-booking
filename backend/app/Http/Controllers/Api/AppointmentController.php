@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Appointment;
 use App\Models\Business;
 use App\Models\Service;
 use App\Models\Staff;
@@ -11,6 +12,23 @@ use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
+    public function index(Request $request)
+    {
+        $appointments = $request->user()
+            ->appointments()
+            ->with([
+                'business:id,name',
+                'staff:id,name',
+                'service:id,name,duration_minutes',
+            ])
+            ->latest('appointment_date')
+            ->latest('start_time')
+            ->get();
+
+        return response()->json([
+            'appointments' => $appointments,
+        ]);
+    }
     public function store(
         Request $request,
         Business $business,
@@ -49,5 +67,33 @@ class AppointmentController extends Controller
             'message' => 'Appointment created successfully.',
             'appointment' => $appointment,
         ], 201);
+    }
+    public function cancel(
+        Request $request,
+        Appointment $appointment
+    ) {
+        abort_unless(
+            $appointment->user_id === $request->user()->id,
+            403
+        );
+
+        if (!in_array($appointment->status, [
+            'pending',
+            'payment_pending',
+            'confirmed',
+        ])) {
+            return response()->json([
+                'message' => 'This appointment cannot be cancelled.',
+            ], 422);
+        }
+
+        $appointment->update([
+            'status' => 'cancelled',
+        ]);
+
+        return response()->json([
+            'message' => 'Appointment cancelled successfully.',
+            'appointment' => $appointment->fresh(),
+        ]);
     }
 }
