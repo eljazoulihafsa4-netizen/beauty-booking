@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\StaffServiceController;
 use App\Http\Controllers\Api\BusinessWorkingHourController;
 use App\Http\Controllers\Api\StaffWorkingHourController;
+use App\Http\Controllers\Api\AppointmentController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -27,13 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/businesses/{business}/staff/{staff}/services', [StaffServiceController::class, 'update']);
     Route::get('/businesses/{business}/working-hours', [BusinessWorkingHourController::class, 'index']);
     Route::put('/businesses/{business}/working-hours', [BusinessWorkingHourController::class, 'update']);
-    Route::get(
-        '/businesses/{business}/staff/{staff}/working-hours',
-        [StaffWorkingHourController::class, 'index']
-    );
-
-    Route::put(
-        '/businesses/{business}/staff/{staff}/working-hours',
-        [StaffWorkingHourController::class, 'update']
-    );
+    Route::get('/businesses/{business}/staff/{staff}/working-hours',[StaffWorkingHourController::class, 'index']);
+    Route::put('/businesses/{business}/staff/{staff}/working-hours',[StaffWorkingHourController::class, 'update']);
+    Route::post('/businesses/{business}/appointments', [AppointmentController::class, 'store']);
     });

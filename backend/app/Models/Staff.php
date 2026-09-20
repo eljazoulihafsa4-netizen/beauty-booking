@@ -40,4 +40,8 @@ class Staff extends Model
     {
         return $this->hasMany(StaffWorkingHour::class);
     }
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }
