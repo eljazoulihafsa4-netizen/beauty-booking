@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BusinessController;
 use App\Http\Controllers\Api\StaffController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\StaffServiceController;
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -20,4 +22,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/businesses/{business}/services', [ServiceController::class, 'store']);
     Route::put('/businesses/{business}/services/{service}', [ServiceController::class, 'update']);
     Route::delete('/businesses/{business}/services/{service}', [ServiceController::class, 'destroy']);
+    Route::put('/businesses/{business}/staff/{staff}/services', [StaffServiceController::class, 'update']);
 });

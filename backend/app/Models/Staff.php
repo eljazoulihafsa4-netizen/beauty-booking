@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Staff extends Model
 {
     use HasFactory;
@@ -30,5 +30,9 @@ class Staff extends Model
     public function business(): BelongsTo
     {
         return $this->belongsTo(Business::class);
+    }
+    public function services(): BelongsToMany
+    {
+        return $this->belongsToMany(Service::class, 'staff_services');
     }
 }
