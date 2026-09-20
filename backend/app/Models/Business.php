@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Business extends Model
 {
     protected $fillable = [
@@ -20,6 +21,10 @@ class Business extends Model
     public function members(): HasMany
     {
         return $this->hasMany(BusinessMember::class);
+    }
+    public function staff(): HasMany
+    {
+        return $this->hasMany(Staff::class);
     }
 }
  
