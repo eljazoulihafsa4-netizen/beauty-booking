@@ -94,10 +94,8 @@ class AvailabilityController extends Controller
             ]);
 
         $slots = [];
-
-        $current = Carbon::createFromFormat('H:i:s', $openTime);
-        $closing = Carbon::createFromFormat('H:i:s', $closeTime);
-        
+        $current = Carbon::parse($openTime);
+        $closing = Carbon::parse($closeTime);
         $duration = $service->duration_minutes;
 
         while ($current->copy()->addMinutes($duration)->lte($closing)) {
@@ -110,8 +108,8 @@ class AvailabilityController extends Controller
                 $slotStart,
                 $slotEnd
             ) {
-                return $appointment->start_time < $slotEnd
-                    && $appointment->end_time > $slotStart;
+                return substr($appointment->start_time, 0, 5) < $slotEnd
+                    && substr($appointment->end_time, 0, 5) > $slotStart;
             });
 
             if (!$hasConflict) {
