@@ -44,7 +44,7 @@ class BookingService
                 ]);
             }
 
-            $duration = $start->diffInMinutes($end);
+            $duration = (int) $start->diffInMinutes($end);
 
             if ($duration !== $service->duration_minutes) {
                 throw ValidationException::withMessages([
@@ -110,7 +110,7 @@ class BookingService
 
             $hasConflict = Appointment::query()
                 ->where('staff_id', $staff->id)
-                ->where('appointment_date', $date->toDateString())
+                ->whereDate('appointment_date', $date->toDateString())
                 ->whereNotIn('status', ['cancelled'])
                 ->where(function ($query) use ($data) {
                     $query
