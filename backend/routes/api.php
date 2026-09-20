@@ -1,7 +1,7 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BusinessController;
 use App\Http\Controllers\Api\StaffController;
 use App\Http\Controllers\Api\ServiceController;
@@ -30,11 +30,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/businesses/{business}/staff/{staff}/services', [StaffServiceController::class, 'update']);
     Route::get('/businesses/{business}/working-hours', [BusinessWorkingHourController::class, 'index']);
     Route::put('/businesses/{business}/working-hours', [BusinessWorkingHourController::class, 'update']);
-    Route::get('/businesses/{business}/staff/{staff}/working-hours',[StaffWorkingHourController::class, 'index']);
-    Route::put('/businesses/{business}/staff/{staff}/working-hours',[StaffWorkingHourController::class, 'update']);
+    Route::get(
+        '/businesses/{business}/staff/{staff}/working-hours',
+        [StaffWorkingHourController::class, 'index']
+    );
+
+    Route::put(
+        '/businesses/{business}/staff/{staff}/working-hours',
+        [StaffWorkingHourController::class, 'update']
+    );
+    
     Route::post('/businesses/{business}/appointments', [AppointmentController::class, 'store']);
     Route::get('/appointments', [AppointmentController::class, 'index']);
-    Route::patch('/appointments/{appointment}/cancel',[AppointmentController::class, 'cancel']);
+    Route::patch(
+        '/appointments/{appointment}/cancel',
+        [AppointmentController::class, 'cancel']);
     Route::get('/businesses/{business}/availability', [AvailabilityController::class, 'index']);
 
 });
