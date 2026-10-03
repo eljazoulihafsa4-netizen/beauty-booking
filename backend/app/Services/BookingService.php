@@ -40,7 +40,7 @@ class BookingService
 
             if ($start->gte($end)) {
                 throw ValidationException::withMessages([
-                    'end_time' => 'End time must be later than start time.',
+                    'end_time' => __('booking.end_time_must_be_later'),
                 ]);
             }
 
@@ -48,7 +48,7 @@ class BookingService
 
             if ($duration !== $service->duration_minutes) {
                 throw ValidationException::withMessages([
-                    'end_time' => 'Appointment duration must match the selected service duration.',
+                    'end_time' => __('booking.duration_must_match'),
                 ]);
             }
 
@@ -63,7 +63,7 @@ class BookingService
                 $businessHours->is_closed
             ) {
                 throw ValidationException::withMessages([
-                    'appointment_date' => 'The business is closed on this day.',
+                    'appointment_date' => __('booking.business_closed'),
                 ]);
             }
 
@@ -72,7 +72,7 @@ class BookingService
                 $data['end_time'] > $businessHours->close_time
             ) {
                 throw ValidationException::withMessages([
-                    'start_time' => 'The appointment is outside business working hours.',
+                    'start_time' => __('booking.outside_business_hours'),
                 ]);
             }
 
@@ -85,7 +85,7 @@ class BookingService
                 $staffHours->is_closed
             ) {
                 throw ValidationException::withMessages([
-                    'appointment_date' => 'The staff member is not working on this day.',
+                    'appointment_date' => __('booking.staff_not_working'),
                 ]);
             }
 
@@ -94,7 +94,7 @@ class BookingService
                 $data['end_time'] > $staffHours->close_time
             ) {
                 throw ValidationException::withMessages([
-                    'start_time' => 'The appointment is outside staff working hours.',
+                    'start_time' => __('booking.outside_staff_hours'),
                 ]);
             }
 
@@ -104,7 +104,7 @@ class BookingService
                     ->exists()
             ) {
                 throw ValidationException::withMessages([
-                    'service_id' => 'This staff member does not provide the selected service.',
+                    'service_id' => __('booking.service_not_provided'),
                 ]);
             }
 
@@ -122,7 +122,7 @@ class BookingService
 
             if ($hasConflict) {
                 throw ValidationException::withMessages([
-                    'start_time' => 'This time slot is already booked.',
+                    'start_time' => __('booking.slot_already_booked'),
                 ]);
             }
 
